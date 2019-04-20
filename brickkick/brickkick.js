@@ -79,8 +79,37 @@ var __main = function () {
             }
         }
 
+        // mouse event
+        var enableDrag = false
+        game.canvas.addEventListener('mousedown', function (event) {
+            var x = event.offsetX
+            var y = event.offsetY
+            // log(x, y, event)
+            // check if ball is clicked
+            if (ball.hasPoint(x, y)) {
+                // set drag mode
+                enableDrag = true
+            }
+        })
+        game.canvas.addEventListener('mousemove', function (event) {
+            var x = event.offsetX
+            var y = event.offsetY
+            if (enableDrag) {
+                // log(x, y, 'drag')
+                ball.x = x
+                ball.y = y
+            }
+        })
+        game.canvas.addEventListener('mouseup', function (event) {
+            enableDrag = false
+        })
+
         game.draw = function () {
-            // draw
+            // draw background
+            game.context.fillStyle = "#654"
+            game.context.fillRect(0, 0, 800, 600)
+
+            // draw game objects
             game.drawImage(paddle)
             game.drawImage(ball)
 
@@ -90,6 +119,7 @@ var __main = function () {
                     game.drawImage(brick)
                 }
             }
+
             // draw labels
             game.context.fillText('score: ' + score, 10, 600)
         }

@@ -1,8 +1,8 @@
 var Ball = function (game) {
     var o = game.imageByName('ball')
     // var image = imageFromPath('ball.png')
-    o.x = 350
-    o.y = 550
+    o.x = 370
+    o.y = 540
     o.speedX = 5
     o.speedY = 5
     o.fired = false
@@ -23,6 +23,11 @@ var Ball = function (game) {
     }
     o.bounce = function () {
         o.speedY *= -1
+    }
+    o.hasPoint = function (x, y) {
+        var xIn = x >= o.x && x <= o.x + o.w
+        var yIn = y >= o.y && y <= o.y + o.h
+        return xIn && yIn
     }
     return o
 }
