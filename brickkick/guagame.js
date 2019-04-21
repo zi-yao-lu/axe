@@ -1,7 +1,8 @@
-var GuaGame = function (fps, images, runCallBack) {
+var GuaGame = function (fps, images, runCallback) {
     // images is an object of reference names and paths of pictures
     // the program would run after loading of all pictures
     var g = {
+        scene: null,
         actions: {},
         keydowns: {},
         images: {},
@@ -21,6 +22,16 @@ var GuaGame = function (fps, images, runCallBack) {
     window.addEventListener('keyup', function (event) {
         g.keydowns[event.key] = false
     })
+
+    // update
+    g.update = function () {
+        g.scene.update()
+    }
+    // draw
+    g.draw = function () {
+        g.scene.draw()
+    }
+
     // register actions
     g.registerAction = function (key, callback) {
         g.actions[key] = callback
@@ -65,7 +76,7 @@ var GuaGame = function (fps, images, runCallBack) {
             // call run after all pictures are loaded successfully
             loads.push(1)
             if (loads.length == names.length) {
-                g.run()
+                g.__start()
             }
         }
     }
@@ -78,12 +89,18 @@ var GuaGame = function (fps, images, runCallBack) {
         }
         return image
     }
-    g.run = function () {
-        runCallBack(g)
+    g.runWithScene = function (scene) {
+        g.scene = scene
         // start running program
         setTimeout(() => {
             runloop()
         }, 1000 / window.fps)
+    }
+    g.replaceScene = function (scene) {
+        g.scene = scene
+    }
+    g.__start = function (scene) {
+        runCallback(g)
     }
     return g
 }
