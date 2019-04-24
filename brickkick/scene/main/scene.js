@@ -50,7 +50,7 @@ var Scene = function (game) {
         // check game over
         if (ball.y > paddle.y) {
             // switch to game over scene
-            var end = SceneEnd(game)
+            var end = SceneEnd.new(game)
             game.replaceScene(end)
         }
 
