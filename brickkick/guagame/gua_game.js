@@ -3,7 +3,7 @@ class GuaGame {
         window.fps = fps
         this.images = images
         this.runCallback = runCallback
-        // 
+        
         this.scene = null
         this.actions = {}
         this.keydowns = {}
@@ -12,7 +12,7 @@ class GuaGame {
         // events
         var self = this
         window.addEventListener('keydown', event => {
-            this.keydowns[event.key] = true
+            self.keydowns[event.key] = true
         })
         window.addEventListener('keyup', function (event) {
             self.keydowns[event.key] = false
@@ -35,7 +35,7 @@ class GuaGame {
     draw() {
         this.scene.draw()
     }
-
+ 
     // register actions
     registerAction(key, callback) {
         this.actions[key] = callback
@@ -104,7 +104,7 @@ class GuaGame {
             img.onload = function () {
                 // save to g.images
                 g.images[name] = img
-                // call run after all pictures are loaded successfully
+                // call run after all pictures are loaded
                 loads.push(1)
                 if (loads.length == names.length) {
                     g.__start()
