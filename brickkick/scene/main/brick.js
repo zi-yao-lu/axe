@@ -11,6 +11,9 @@ var Brick = function (game, position) {
     o.image = img.image
     o.w = img.w
     o.h = img.h
+
+    // enableDrag for editing purpose
+    o.enableDrag = false
     o.kill = function () {
         o.lifes--
         if (o.lifes < 1) {
@@ -19,6 +22,11 @@ var Brick = function (game, position) {
     }
     o.collide = function (b) {
         return o.alive && (rectIntersects(o, b) || rectIntersects(b, o))
+    }
+    o.hasPoint = function (x, y) {
+        var xIn = x >= o.x && x <= o.x + o.w
+        var yIn = y >= o.y && y <= o.y + o.h
+        return xIn && yIn
     }
     return o
 }
