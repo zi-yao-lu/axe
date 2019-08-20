@@ -1,135 +1,170 @@
+const config = {
+    player_speed: 10,
+    cloud_speed: 1,
+    enemy_speed: 5,
+    bullet_speed: 5,
+    fire_cooldown: 9,
+}
+
+
+class Bullet extends GuaImage {
+    constructor(game) {
+        super(game, 'bullet')
+        this.setUp()
+    }
+    setUp() {
+        this.speed = 5
+        this.speed = config.bullet_speed
+    }
+    update() {
+        this.y -= this.speed
+        // if (this.y < 0) {
+        //     destroy()
+        // }
+    }
+
+}
+
+
+class Player extends GuaImage {
+    constructor (game) {
+        super(game, 'player')
+        this.setUp()
+    }
+    setUp() {
+        this.speed = config.player_speed
+        this.cooldown = 0
+    }
+    update() {
+        this.speed = config.player_speed
+        if (this.cooldown > 0) {
+            this.cooldown--
+        }
+    }
+    fire() {
+        if (this.cooldown == 0) {
+            this.cooldown = config.fire_cooldown
+            var x = this.x + this.w / 2
+            var y = this.y
+            var b = Bullet.new(this.game)
+            b.x = x
+            b.y = y
+            this.scene.addElement(b)
+        }
+    }
+    moveLeft() {
+        this.x -= this.speed
+    }
+    moveRight() {
+        this.x += this.speed
+    }
+    moveUp() {
+        this.y -= this.speed
+    }
+    moveDown() {
+        this.y += this.speed
+    }
+} 
+
+
+class Enemy extends GuaImage {
+    constructor (game) {
+        var type = randomBetween(0, 4)
+        var name = 'enemy' + type
+        super(game, name)
+        this.setUp()
+    }
+    setUp() {
+        this.speed = randomBetween(2, 5)
+        this.x = randomBetween(0, 500)
+        this.y = -randomBetween(0, 200)
+    }
+    update() {
+        this.y += this.speed
+        if (this.y > 800) {
+            this.setUp()
+        }
+    }
+}
+
+
+class Cloud extends GuaImage {
+    constructor (game) {
+        super(game, 'cloud')
+        this.setUp()
+    }
+    setUp() {
+        this.speed = 1
+        this.x = randomBetween(0, 500)
+        this.y = -randomBetween(0, 200)
+    }
+    update() {
+        this.y += this.speed
+        if (this.y > 800) {
+            this.setUp()
+        }
+    }
+    debug() {
+        this.speed = config.cloud_speed
+
+    }
+} 
+
+
 class Scene extends GuaScene {
     constructor(game) {
         super(game)
         this.setup()
+        this.setupInputs()
     }
     setup() {
         var game = this.game
+        this.numberOfEnemies = 10
         this.bg = GuaImage.new(game, 'sky')
-        this.cloud = GuaImage.new(game, 'cloud')
-        this.player = GuaImage.new(game, 'player')
+        this.cloud = Cloud.new(this.game)
+
+        this.player = Player.new(game)
         this.player.x = 220
         this.player.y = 950
         
-        // this.game.registerAction('w', function () {
-        //     paddle.()
-        // })
-        this.game.registerAction('a', function () {
-            paddle.moveLeft()
-        })
-        this.game.registerAction('d', function () {
-            paddle.moveRight()
-        })
-        this.game.registerAction('f', function () {
-            ball.fire()
-        })
-
         this.addElement(this.bg)
-        this.addElement(this.player)
         this.addElement(this.cloud)
+        this.addElement(this.player)
+
+        // 
+        this.addEnemies()
+    }
+    addEnemies() {
+        var es = []
+        for (var i = 0; i < this.numberOfEnemies; i++) {
+            var e = Enemy.new(this.game)
+            es.push(e)
+            this.addElement(e)
+        }
+        this.enemeis = es
+    }
+    setupInputs() {
+        var g = this.game
+        var s = this
+        g.registerAction('a', function() {
+            s.player.moveLeft()
+        })
+        g.registerAction('d', function() {
+            s.player.moveRight()
+        })
+        g.registerAction('w', function() {
+            s.player.moveUp()
+        })
+        g.registerAction('s', function() {
+            s.player.moveDown()
+        })
+        g.registerAction('j', function() {
+            s.player.fire()
+        })
     }
     
     update () {
+        super.update()
         this.cloud.y += 1
     }
 }
-
-// var Scene = function (game) {
-//     var s = {
-//         game: game,
-//     }
-
-//     // initilization
-//     var paddle = Paddle(game)
-//     var ball = Ball(game)
-
-//     var score = 0
-
-//     bricks = loadLevel(game, 1)
-
-//     game.registerAction('a', function () {
-//         paddle.moveLeft()
-//     })
-//     game.registerAction('d', function () {
-//         paddle.moveRight()
-//     })
-//     game.registerAction('f', function () {
-//         ball.fire()
-//     })
-
-//     s.draw = function () {
-//         // draw background
-//         game.context.fillStyle = "#654"
-//         game.context.fillRect(0, 0, 800, 600)
-
-//         // draw game objects
-//         game.drawImage(paddle)
-//         game.drawImage(ball)
-
-//         for (var i = 0; i < bricks.length; i++) {
-//             var brick = bricks[i]
-//             if (brick.alive) {
-//                 game.drawImage(brick)
-//             }
-//         }
-
-//         // draw labels
-//         game.context.fillText('score: ' + score, 10, 600)
-//     }
-
-//     s.update = function () {
-//         if (window.paused) {
-//             return
-//         }
-
-//         ball.move()
-//         // check game over
-//         if (ball.y > paddle.y) {
-//             // switch to game over scene
-//             var end = SceneEnd.new(game)
-//             game.replaceScene(end)
-//         }
-
-//         // check paddle bounces ball
-//         if (paddle.collide(ball)) {
-//             ball.bounce()
-//         }
-
-//         // check ball hits brick
-//         for (var i = 0; i < bricks.length; i++) {
-//             var brick = bricks[i]
-//             if (brick.collide(ball)) {
-//                 brick.kill()
-//                 ball.bounce()
-//                 // update score
-//                 score += 10
-//             }
-//         }
-//     }
-
-//     // mouse event
-//     var enableDrag = false
-//     game.canvas.addEventListener('mousedown', function (event) {
-//         var x = event.offsetX
-//         var y = event.offsetY
-//         // log(x, y, event)
-//         // check if ball is clicked
-//         if (ball.hasPoint(x, y)) {
-//             // set drag mode
-//             enableDrag = true
-//         }
-//     })
-//     game.canvas.addEventListener('mousemove', function (event) {
-//         var x = event.offsetX
-//         var y = event.offsetY
-//         if (enableDrag) {
-//             // log(x, y, 'drag')
-//             ball.x = x
-//             ball.y = y
-//         }
-//     })
-//     game.canvas.addEventListener('mouseup', function (event) {
-//         enableDrag = false
-//     })
-//     return s
-// }
