@@ -1,15 +1,8 @@
 var e = sel => document.querySelector(sel)
 
-// var log = function (s) {
-//     e('#id-text-log').value += '\n' + s
-// }
+
 var log = console.log.bind(console)
 
-// var imageFromPath = function (path) {
-//     var img = new Image()
-//     img.src = path
-//     return img
-// }
 
 var rectIntersects = function (a, b) {
     var o = a
@@ -20,6 +13,7 @@ var rectIntersects = function (a, b) {
     }
     return false
 }
+
 
 const randomBetween = function (start, end) {
     var n = Math.random() * (end - start + 1)
