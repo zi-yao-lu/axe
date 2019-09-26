@@ -1,14 +1,3 @@
-var loadLevel = function (game, n) {
-    var level = levels[n - 1]
-    var bricks = []
-    for (var i = 0; i < level.length; i++) {
-        var p = level[i]
-        var b = Brick(game, p)
-        bricks.push(b)
-    }
-    return bricks
-}
-
 var enableDebugMode = function (game, enable) {
     if (!enable) {
         return
@@ -18,8 +7,6 @@ var enableDebugMode = function (game, enable) {
         var k = event.key
         if (k == 'p') {
             window.paused = !window.paused
-        } else if ('1234567'.includes(k)) {
-            bricks = loadLevel(game, Number(k))
         }
     })
 }
