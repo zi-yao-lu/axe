@@ -24,17 +24,17 @@ class GuaParticle extends GuaImage {
 
 
 class GuaParticleSystem {
-    constructor(game) {
+    constructor(game, x, y) {
         this.game = game
-        this.setUp()
+        this.setUp(x, y)
     }
-    static new(game) {
-        return new this(game)
+    static new(game, x, y) {
+        return new this(game, x, y)
     }
-    setUp() {
+    setUp(x, y) {
         this.duration = 20
-        this.x = 150
-        this.y = 200
+        this.x = x
+        this.y = y
         this.numberOfParticles = 6
         this.particles = []
     }
@@ -62,7 +62,7 @@ class GuaParticleSystem {
     }
     draw() {
         if (this.duration < 0) {
-            // TODO: remove particles from scene
+            this.scene.removeElement(this)
             return
         }
         for (var p of this.particles) {

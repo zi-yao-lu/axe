@@ -10,8 +10,4 @@ class SceneTitle extends GuaScene {
         var ps = GuaParticleSystem.new(game)
         this.addElement(ps)
     }
-    // draw() {
-        // draw labels
-        // this.game.context.fillText('Press k to Start Game', 100, 260)
-    // }
 }
