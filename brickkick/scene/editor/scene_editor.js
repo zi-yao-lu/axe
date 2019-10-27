@@ -24,12 +24,21 @@ class SceneEditor extends GuaScene {
             var x = event.offsetX
             var y = event.offsetY
             // log(x, y, event)
+            var brick_clicked = false
             // check if a brick is clicked
             for (var i = 0; i < self.bricks.length; i++) {
                 var brick = self.bricks[i]
                 if (brick.hasPoint(x, y)) {
                     brick.enableDrag = true
+                    brick_clicked = true
                 }
+            }
+
+            // if no brick is clicked
+            if (!brick_clicked) {
+                var p = [x, y]
+                var new_brick = Brick(self.game, p)
+                self.bricks.push(new_brick)
             }
 
         })
@@ -59,7 +68,10 @@ class SceneEditor extends GuaScene {
     draw() {
         // draw editor mode
         this.game.context.fillText('Editor Mode', 20, 20)
-        this.game.context.fillText('Press c to save and go to game title', 20, 40)
+        this.game.context.fillText('Press number 1~7 to select level to edit', 20, 40)
+        this.game.context.fillText('Press a brick to drag it, or press blank to add a brick', 20, 60)
+        this.game.context.fillText('Press c to save and go to game title', 20, 80)
+        this.game.context.fillText('Press k to save and start game', 20, 100)
         this.log_levels_data()
 
         for (var i = 0; i < this.bricks.length; i++) {
