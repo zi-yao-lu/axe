@@ -1,74 +1,76 @@
 class Scene extends GuaScene {
     constructor(game) {
         super(game)
-        this.setup()
+        // background
+        var bg = GuaImage.new(game, 'background')
+        this.addElement(bg)
+
+        // add pipes
+        this.pipes = Pipes.new(game)
+        this.addElement(this.pipes)
+
+        // add ground
+        this.grounds = []
+        for (var i = 0; i < 18; i++) {
+            var ground = GuaImage.new(game, 'ground')
+            ground.x = i * 25
+            ground.y = 500
+            this.addElement(ground)
+            this.grounds.push(ground)
+        }
+        this.skipCount = 4
+
+        // bird
+        this.birdSpeed = 2
+        var b = GuaAnimation.new(game)
+        b.x = 180
+        b.y = 200
+        this.bird = b
+        this.addElement(b)
+
         this.setupInputs()
     }
-    setup() {
-        var game = this.game
-        this.numberOfEnemies = 3
-        this.bg = GuaImage.new(game, 'sky')
-        this.cloud = Cloud.new(this.game)
-
-        this.player = Player.new(game)
-        this.player.x = 220
-        this.player.y = 950
-        
-        this.addElement(this.bg)
-        this.addElement(this.cloud)
-        this.addElement(this.player)
-
-        this.addEnemies()
+    debug() {
+        this.birdSpeed = config.bird_speed.value
     }
-    addEnemies() {
-        var es = []
-        for (var i = 0; i < this.numberOfEnemies; i++) {
-            var e = Enemy.new(this.game)
-            es.push(e)
-            this.addElement(e)
-        }
-        this.enemies = es
-    }
-    setupInputs() {
-        var g = this.game
-        var s = this
-        g.registerAction('a', function() {
-            s.player.moveLeft()
-        })
-        g.registerAction('d', function() {
-            s.player.moveRight()
-        })
-        g.registerAction('w', function() {
-            s.player.moveUp()
-        })
-        g.registerAction('s', function() {
-            s.player.moveDown()
-        })
-        g.registerAction('j', function() {
-            s.player.fire()
-        })
-    }
-    
-    update () {
+    update() {
         super.update()
-        this.cloud.y += 1
-
-        // check enemies collision with bullets
-        for (var i = 0; i < this.enemies.length; i++) {
-            var enemy = this.enemies[i]
-            if (!enemy.alive) {
-                var x = enemy.x
-                var y = enemy.y
-                var ps = GuaParticleSystem.new(this.game, x, y)
-                this.addElement(ps)
-                enemy.setUp()
+        // check collision
+        for (var p of this.pipes.pipes) {
+            if (rectIntersects(this.bird, p) || rectIntersects(p, this.bird)) {
+                this.bird.alive = false
             }
         }
-
-        // check player colision with bullets
-        if (!this.player.alive) {
-            var end = SceneEnd.new(this.game)
-            this.game.replaceScene(end)
+        // game over
+        if (!this.bird.alive) {
+            this.game.scene.update = function() {}
+        }
+        // move ground
+        this.skipCount--
+        this.offset = -5
+        if (this.skipCount == 0) {
+            this.skipCount = 4
+            this.offset = 15
+        }
+        for (var i = 0; i < 18; i++) {
+            var g = this.grounds[i]
+            g.x += this.offset
         }
     }
-}
+    setupInputs() {
+        var self = this
+        var b = this.bird
+        self.game.registerAction('a', function(keyStatus) {
+            b.move(-self.birdSpeed, keyStatus)
+        })
+        self.game.registerAction('d', function(keyStatus) {
+            b.move(self.birdSpeed, keyStatus)
+        })
+        self.game.registerAction('j', function(keyStatus) {
+           b.jump(2, keyStatus)
+        })
+        self.game.canvas.addEventListener('mousedown', function (event) {
+            b.jump(2, event)
+        })
+    }
+} 

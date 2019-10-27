@@ -4,8 +4,27 @@ class SceneTitle extends GuaScene {
         // background
         var bg = GuaImage.new(game, 'background')
         this.addElement(bg)
+        var ready = GuaImage.new(game, 'ready')
+        ready.x = 100
+        ready.y = 20
+        var tap = GuaImage.new(game, 'tap')
+        tap.x = 140
+        tap.y = 80
+        this.addElement(ready)
+        this.addElement(tap)
 
-        // move ground
+        var label = GuaLabel.new(game, 'Press j or tap to start game', 150, 250)
+        this.addElement(label)
+
+        // add bird
+        var bird = GuaAnimation.new(game)
+        bird.vy = bird.gy = 0
+        bird.still = true
+        bird.x = 180
+        bird.y = 200
+        this.addElement(bird)
+
+        // add ground
         this.grounds = []
         for (var i = 0; i < 18; i++) {
             var ground = GuaImage.new(game, 'ground')
@@ -15,13 +34,6 @@ class SceneTitle extends GuaScene {
             this.grounds.push(ground)
         }
         this.skipCount = 4
-
-        // bird
-        var b = GuaAnimation.new(game)
-        b.x = 100
-        b.y = 200
-        this.bird = b
-        this.addElement(b)
 
         this.setupInputs()
     }
@@ -39,17 +51,14 @@ class SceneTitle extends GuaScene {
             g.x += this.offset
         }
     }
+    start() {
+        var s = Scene.new(this.game)
+        this.game.replaceScene(s)
+    }
     setupInputs() {
         var self = this
-        var b = this.bird
-        self.game.registerAction('a', function(keyStatus) {
-            b.move(-2, keyStatus)
-        })
-        self.game.registerAction('d', function(keyStatus) {
-            b.move(2, keyStatus)
-        })
-        self.game.registerAction('j', function(keyStatus) {
-           b.jump(2, keyStatus)
-        })
+        var start = self.start
+        self.game.registerAction('j', start)
+        self.game.canvas.addEventListener('mousedown', start)
     }
 } 

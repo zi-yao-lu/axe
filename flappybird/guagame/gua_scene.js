@@ -26,6 +26,7 @@ class GuaScene {
         )
     }
     update() {
+        this.debug && this.debug()
         if (this.debugModeEnabled) {
             this.elements.forEach(
                 function (element) {

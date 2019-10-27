@@ -1,7 +1,14 @@
 const config = {
-    player_speed: 10,
-    cloud_speed: 1,
-    enemy_speed: 5,
-    bullet_speed: 12,
-    fire_cooldown: 9,
+    bird_speed: {
+        _comment: '鸟的速度',
+        value: 2,
+    },
+    pipe_space: {
+        _comment: '管口间距',
+        value: 150,
+    },
+    pipe_distance: {
+        _comment: '管子水平间距',
+        value: 200,
+    },
 }

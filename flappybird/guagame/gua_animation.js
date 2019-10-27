@@ -10,11 +10,6 @@ class GuaAnimation {
             var t = game.textureByName(name)
             this.animations['bird'].push(t)
         }
-        // for (var i = 1; i < 17; i++) {
-        //     var name = `idle${i}`
-        //     var t = game.textureByName(name)
-        //     this.animations['idle'].push(t)
-        // }
         this.animationName = 'bird'
         this.texture = this.frames()[0]
         this.w = this.texture.width
@@ -22,14 +17,17 @@ class GuaAnimation {
         this.frameIndex = 0
         this.frameCount = 3
 
-        // 
+        // rotation and movement
         this.flipX = false
         this.rotation = 0
-        this.alpha = 1
+        this.still = false
 
         // gravity
         this.gy = 10
         this.vy = 0
+
+        // alive
+        this.alive = true
     }
     static new(game) {
         return new this(game)
@@ -38,19 +36,16 @@ class GuaAnimation {
         return this.animations[this.animationName]
     }
     update() {
-        // update alpha
-        if (this.alpha > 0) {
-            this.alpha -= 0.05
-        }
         // update speed y
         this.y += this.vy
         this.vy += this.gy * 0.2
         var h = 470
         if (this.y > h) {
             this.y = h
+            this.alive = false
         }
         // update rotation
-        if (this.rotation <= 45) {
+        if (!this.still && this.rotation <= 45) {
             this.rotation += 5
         }
         
@@ -73,7 +68,6 @@ class GuaAnimation {
         if (this.flipX) {
             context.scale(-1, 1)
         }
-        context.globalAlpha = this.alpha
 
         context.rotate(this.rotation * Math.PI / 180)
         context.translate(-w2, -h2)
