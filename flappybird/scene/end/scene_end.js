@@ -1,13 +1,36 @@
 class SceneEnd extends GuaScene {
-    constructor(game) {
+    constructor(game, scene_main) {
         super(game)
-        var label_1 = GuaLabel.new(game, 'Game Over', 100, 260)
-        var label_2 = GuaLabel.new(game, 'Press r to restart', 100, 300)
-        this.addElement(label_1)
-        this.addElement(label_2)
-        game.registerAction('r', function () {
-            var s = Scene.new(game)
-            game.replaceScene(s)
+        for (var e of scene_main.elements) {
+            e.update = function() {}
+            this.addElement(e[1])
+        }
+
+        // game_over title
+        var end_title = GuaImage.new(game, 'gameover')
+        end_title.x = 100
+        end_title.y = 150
+        this.addElement(end_title)
+        var label = GuaLabel.new(game, 'Press r to restart game', 150, 250)
+        this.addElement(label)
+
+        this.setupInputs()
+    }
+    static new(game, scece_main) {
+        return new this(game, scece_main)
+    }
+    update() {}
+    restart() {
+        var s = SceneTitle.new(this.game)
+        this.game.replaceScene(s)
+    }
+    setupInputs() {
+        var self = this
+        self.game.registerAction('a', function() {})
+        self.game.registerAction('d', function() {})
+        self.game.registerAction('j', function() {})
+        self.game.registerAction('r', function() {
+            self.restart()
         })
     }
-}
+} 

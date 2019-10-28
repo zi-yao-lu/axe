@@ -43,7 +43,7 @@ class Scene extends GuaScene {
         }
         // game over
         if (!this.bird.alive) {
-            this.game.scene.update = function() {}
+            this.end()
         }
         // move ground
         this.skipCount--
@@ -57,6 +57,10 @@ class Scene extends GuaScene {
             g.x += this.offset
         }
     }
+    end() {
+        var s = SceneEnd.new(this.game, this)
+        this.game.replaceScene(s)
+    }
     setupInputs() {
         var self = this
         var b = this.bird
@@ -66,11 +70,11 @@ class Scene extends GuaScene {
         self.game.registerAction('d', function(keyStatus) {
             b.move(self.birdSpeed, keyStatus)
         })
-        self.game.registerAction('j', function(keyStatus) {
-           b.jump(2, keyStatus)
+        self.game.registerAction('j', function() {
+            b.jump()
         })
-        self.game.canvas.addEventListener('mousedown', function (event) {
-            b.jump(2, event)
+        self.game.canvas.addEventListener('mousedown', function () {
+            b.jump()
         })
     }
 } 

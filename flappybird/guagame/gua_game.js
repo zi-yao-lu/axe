@@ -12,10 +12,10 @@ class GuaGame {
         // events
         var self = this
         window.addEventListener('keydown', event => {
-            self.keydowns[event.key] = 'down'
+            self.keydowns[event.key] = true
         })
         window.addEventListener('keyup', function (event) {
-            self.keydowns[event.key] = 'up'
+            self.keydowns[event.key] = false
         })
         this.init()
     }
@@ -50,13 +50,8 @@ class GuaGame {
         for (var i = 0; i < actions.length; i++) {
             var key = actions[i]
             var status = g.keydowns[key]
-            if (status == 'down') {
-                // if key is pressed down
-                g.actions[key]('down')
-            } else if (status == 'up') {
-                g.actions[key]('up')
-                // delete the status of key
-                g.keydowns[key] = null
+            if (g.keydowns[key]) {
+                g.actions[key]()
             }
         }
         // update

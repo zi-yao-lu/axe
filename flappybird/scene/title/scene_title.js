@@ -52,13 +52,16 @@ class SceneTitle extends GuaScene {
         }
     }
     start() {
+        this.game.canvas.removeEventListener('mousedown', this.start_game)
         var s = Scene.new(this.game)
         this.game.replaceScene(s)
     }
     setupInputs() {
         var self = this
-        var start = self.start
-        self.game.registerAction('j', start)
-        self.game.canvas.addEventListener('mousedown', start)
+        this.start_game = function() {
+            self.start()
+        }
+        self.game.registerAction('j', this.start_game)
+        self.game.canvas.addEventListener('mousedown', this.start_game)
     }
 } 

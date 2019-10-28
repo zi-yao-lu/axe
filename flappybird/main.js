@@ -14,7 +14,6 @@ var enableDebugMode = function (game, enable) {
 var __main = function () {
 
     var images = {
-        // scece title
         background: 'img/background.png',
         bird0: 'img/bird0.png',
         bird1: 'img/bird1.png',
@@ -23,6 +22,7 @@ var __main = function () {
         tap: 'img/tap.png',
         ground: 'img/ground.png',
         pipe: 'img/pipe.png',
+        gameover: 'img/gameover.png',
     }
     var game = GuaGame.instance(60, images, function (g) {
         var s = SceneTitle.new(g)

@@ -82,7 +82,7 @@ class GuaAnimation {
         }
         this.rotation = -45
     }
-    move(x, keyStatus) {
+    move(x) {
         this.flipX = (x < 0)
         this.x += x
     }
